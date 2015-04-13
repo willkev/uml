@@ -77,7 +77,7 @@ public class Uml {
             PopUp.error(ex);
             return;
         }
-        assembly();
+        assemblyNormal();
     }
 
     public void findAll(JavaClass java) {
@@ -93,29 +93,19 @@ public class Uml {
                 classes.add(sun);
             }
         }
-        assembly();
+        assemblyNormal();
     }
 
     public void findDown(JavaClass java) {
-        findDown(java, true);
-    }
-
-    public void findDownOnly(JavaClass java) {
-        findDown(java, false);
-    }
-
-    private void findDown(JavaClass java, boolean plus) {
         init();
-        if (plus) {
-            classesName.add(java.getFullyQualifiedName());
-            classes.add(java);
-        }
+//        classesName.add(java.getFullyQualifiedName());
+//        classes.add(java);
         for (JavaClass sun : java.getDerivedClasses()) {
             if (classesName.add(sun.getFullyQualifiedName())) {
                 classes.add(sun);
             }
         }
-        assembly();
+        assemblyDown(java);
     }
 
     public void findUp(JavaClass java) {
@@ -126,11 +116,23 @@ public class Uml {
             PopUp.error(ex);
             return;
         }
-        assembly();
+        assemblyNormal();
     }
     private String out;
 
-    private void assembly() {
+    private void assemblyNormal() {
+        assembly(null);
+    }
+
+    private void assemblyDown(JavaClass rootClass) {
+        assembly(rootClass);
+    }
+
+    /**
+     * @param rootClass Se diferente de null, montará apenas as classes que
+     * implementam a toorClass
+     */
+    private void assembly(JavaClass rootClass) {
         out = "@startuml\n";
         for (JavaClass jc : classes) {
             assemblyDeclare(jc);
@@ -138,9 +140,15 @@ public class Uml {
         for (JavaClass jc : classes) {
             assemblySuperClass(jc);
         }
+        // Assembler Interfaces
         for (JavaClass jc : classes) {
             if (!jc.getInterfaces().isEmpty()) {
                 for (JavaClass jcInterface : jc.getInterfaces()) {
+                    if (rootClass != null) {
+                        if (!rootClass.getFullyQualifiedName().equals(jcInterface.getFullyQualifiedName())) {
+                            continue;
+                        }
+                    }
                     assemblyInterface(jc, jcInterface);
                 }
             }
@@ -231,3 +239,22 @@ public class Uml {
         return javaReturn;
     }
 }
+
+
+/*
+
+ var nodeList = document.querySelectorAll( 'textarea' );
+ if(nodeList.length == 1){
+ nodeList[0].value = "teste";
+ } else {
+ alert("textarea not found!");
+ var show = "";
+ for (var index = 0; index < nodeList.length; index++) {
+ show += nodeList[index] + " ###\n";
+ show += nodeList[index].value + "\n";
+ }
+ alert(show);
+ }
+
+
+ */
