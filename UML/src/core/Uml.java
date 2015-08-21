@@ -37,10 +37,17 @@ public class Uml {
         System.out.println("[Scan: " + scan.scan().size() + "] " + PATH);
         builder = new JavaProjectBuilder();
         builder.setEncoding("UTF-8");
+        int testClasses = 0;
         int ignore = 0;
         int error = 0;
         for (File javaFile : scan.scan()) {
             try {
+                // Ignora as classes de teste (testa no padrão Win e Unix)
+                if (javaFile.getPath().contains("src\\test\\java")
+                        || javaFile.getPath().contains("src/test/java")) {
+                    testClasses++;
+                    continue;
+                }
                 builder.addSource(javaFile);
                 System.out.println(builder.getSources().size() + " [Load-ok]" + javaFile.getPath());
             } catch (Exception ex) {
@@ -53,9 +60,10 @@ public class Uml {
                 }
             }
         }
-        System.out.println("[Error:" + error + "]");
-        System.out.println("[Ignore:" + ignore + "]");
-        System.out.println("[Loaded:" + builder.getSources().size() + "]");
+        System.out.printf("[Error: %d]\n", error);
+        System.out.printf("[Ignore: %d]\n", ignore);
+        System.out.printf("[Tests(Ignore): %d]\n", testClasses);
+        System.out.printf("[Loaded: %d]\n", builder.getSources().size());
         myPackges = new ArrayList<String>();
         for (JavaPackage jPck : builder.getPackages()) {
             myPackges.add(jPck.getName());
@@ -129,8 +137,7 @@ public class Uml {
     }
 
     /**
-     * @param rootClass Se diferente de null, montará apenas as classes que
-     * implementam a toorClass
+     * @param rootClass Se diferente de null, montará apenas as classes que implementam a toorClass
      */
     private void assembly(JavaClass rootClass) {
         out = "@startuml\n";

@@ -19,7 +19,8 @@ import utils.CtrlC;
 import utils.PopUp;
 
 public class Starter extends JFrame {
-
+    
+    private static final String GIT_URL_MASTER = "http://git.animati.com.br/root/workstation/blob/master/";
     public static final String URL = "http://www.plantuml.com/plantuml/form";
     //public static final Browser browser = new Browser();
 
@@ -31,7 +32,7 @@ public class Starter extends JFrame {
     private Uml uml;
     private JTextField find = new JTextField(25);
     private JLabel statusBar = new JLabel();
-
+    
     public Starter() {
         super("UML");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,8 +58,8 @@ public class Starter extends JFrame {
         pActions.add(buttonFindDown("UML - Down"));
         pActions.add(buttonFindUp("UML - Up"));
         pActions.add(buttonGit("Git URL"));
-        pActions.add(buttonOpenURL("Open Plantuml"));
-
+        pActions.add(buttonOpenPlantuml("Open Plantuml"));
+        
         JPanel pInfo = new JPanel();
         pInfo.add(new JLabel("Digite apenas o nome da classe"));
         JPanel pStatus = new JPanel();
@@ -70,7 +71,7 @@ public class Starter extends JFrame {
         p.add(pStatus);
         return p;
     }
-
+    
     private JButton buttonFindAllRecursive(String str) {
         JButton btn = new JButton(new AbstractAction() {
             @Override
@@ -89,7 +90,7 @@ public class Starter extends JFrame {
         btn.setName(str);
         return btn;
     }
-
+    
     private JButton buttonFindAll(String str) {
         JButton btn = new JButton(new AbstractAction() {
             @Override
@@ -108,7 +109,7 @@ public class Starter extends JFrame {
         btn.setName(str);
         return btn;
     }
-
+    
     private JButton buttonFindDown(String str) {
         JButton btn = new JButton(new AbstractAction() {
             @Override
@@ -127,7 +128,7 @@ public class Starter extends JFrame {
         btn.setName(str);
         return btn;
     }
-
+    
     private JButton buttonFindUp(String str) {
         JButton btn = new JButton(new AbstractAction() {
             @Override
@@ -146,14 +147,15 @@ public class Starter extends JFrame {
         btn.setName(str);
         return btn;
     }
-
+    
     private JButton buttonGit(String str) {
         JButton btn = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     statusClear();
-                    gitURL(uml.get(find.getText()));
+                    String gitURL = gitURL(uml.get(find.getText()));
+                    openURL(gitURL);
                     statusOk();
                 } catch (BadAttributeValueExpException ex) {
                     PopUp.error(ex);
@@ -164,35 +166,40 @@ public class Starter extends JFrame {
         btn.setName(str);
         return btn;
     }
-
-    private JButton buttonOpenURL(String str) {
+    
+    private JButton buttonOpenPlantuml(String str) {
         JButton btn = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI(URL));
-                } catch (Exception ex) {
-                    PopUp.error("Função não suportada pelo Sistema Operacional, abra manualmente:\n" + URL);
-                }
+                openURL(URL);
             }
         });
         btn.setText(str);
         btn.setName(str);
         return btn;
     }
-
-    private void gitURL(JavaClass j) {
-        String git = "https://git.animati.com.br/root/workstation/blob/master/";
+    
+    private void openURL(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (Exception ex) {
+            PopUp.error("Função não suportada pelo Sistema Operacional, abra manualmente:\n" + URL);
+        }
+    }
+    
+    private String gitURL(JavaClass j) {
         String path = j.getSource().getURL().getPath();
         int x = path.indexOf("workstation");
-        CtrlC.copy(git + path.substring(x + 12));
+        String urlgit = GIT_URL_MASTER + path.substring(x + 12);
+        CtrlC.copy(urlgit);
+        return urlgit;
     }
-
+    
     private void statusClear() {
         statusBar.setText("");
         statusBar.validate();
     }
-
+    
     private void statusOk() {
         statusBar.setText(STATUS_OK);
         statusBar.setForeground(Color.blue);
