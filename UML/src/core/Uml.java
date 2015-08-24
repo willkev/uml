@@ -80,7 +80,7 @@ public class Uml {
     public void findAllRecursive(JavaClass java) {
         init();
         try {
-            Uml.this.findAllRecursive(java, true);
+            findAllRecursive(java, true);
         } catch (Exception ex) {
             PopUp.error(ex);
             return;
@@ -91,7 +91,7 @@ public class Uml {
     public void findAll(JavaClass java) {
         init();
         try {
-            Uml.this.findAllRecursive(java, false);
+            findAllRecursive(java, false);
         } catch (Exception ex) {
             PopUp.error(ex);
             return;
@@ -119,7 +119,7 @@ public class Uml {
     public void findUp(JavaClass java) {
         init();
         try {
-            Uml.this.findAllRecursive(java, false);
+            findAllRecursive(java, false);
         } catch (Exception ex) {
             PopUp.error(ex);
             return;
