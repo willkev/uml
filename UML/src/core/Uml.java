@@ -137,7 +137,7 @@ public class Uml {
     }
 
     /**
-     * @param rootClass Se diferente de null, montará apenas as classes que implementam a toorClass
+     * @param rootClass Se diferente de null, montará apenas as classes que implementam a rootClass
      */
     private void assembly(JavaClass rootClass) {
         out = "@startuml\n";
@@ -246,22 +246,3 @@ public class Uml {
         return javaReturn;
     }
 }
-
-
-/*
-
- var nodeList = document.querySelectorAll( 'textarea' );
- if(nodeList.length == 1){
- nodeList[0].value = "teste";
- } else {
- alert("textarea not found!");
- var show = "";
- for (var index = 0; index < nodeList.length; index++) {
- show += nodeList[index] + " ###\n";
- show += nodeList[index].value + "\n";
- }
- alert(show);
- }
-
-
- */
