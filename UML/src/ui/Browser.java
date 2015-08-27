@@ -17,7 +17,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
-import static ui.Starter.URL;
+import static ui.Starter.PLANTUML_URL;
 
 public class Browser extends JFrame {
 
@@ -53,7 +53,7 @@ public class Browser extends JFrame {
             public void run() {
                 WebView browser = new WebView();
                 engine = browser.getEngine();
-                engine.load(URL);
+                engine.load(PLANTUML_URL);
                 StackPane sp = new StackPane();
                 sp.getChildren().add(browser);
                 fxPanel.setScene(new Scene(sp));
